@@ -1,0 +1,466 @@
+// FONT
+@font-face {
+  font-family: "AvengeanceHeroicAvengerBold";
+  src: url("../fonts/AvengeanceHeroicAvengerBold-MM2J.woff") format("woff");
+}
+@font-face {
+  font-family: "NanumSquareRoundLight";
+  src: url("../fonts/NanumSquareRoundL.woff") format("woff");
+}
+@font-face {
+  font-family: "NanumSquareRound";
+  src: url("../fonts/NanumSquareRoundR.woff") format("woff");
+}
+@font-face {
+  font-family: "NanumSquareRoundBold";
+  src: url("../fonts/NanumSquareRoundB.woff") format("woff");
+}
+@font-face {
+  font-family: "NanumSquareRoundExtraBold";
+  src: url("../fonts/NanumSquareRoundEB.woff") format("woff");
+}
+@font-face {
+  font-family: "NanumSquareExtraBold";
+  src: url("../fonts/NanumSquareEB.woff") format("woff");
+}
+@font-face {
+  font-family: "NanumSquareBold";
+  src: url("../fonts/NanumSquareB.woff") format("woff");
+}
+
+// ANIMATION
+@keyframes openBar {
+  0% {
+    opacity: 0;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    backdrop-filter: none;
+    width: 0;
+  }
+  1% {
+    opacity: 1;
+  }
+  100% {
+    width: 40vw;
+  }
+}
+@-webkit-keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+// 글자 수 제한
+@mixin ellipsis($line-cnt, $line-height) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $line-cnt; /* 라인수 */
+  -webkit-box-orient: vertical;
+  word-break: keep-all;
+  word-wrap: break-word;
+  line-height: $line-height;
+  height: $line-height * $line-cnt; /* line-height 가 1.2em 이고 3라인을 자르기 때문에 height는 1.2em * 3 = 3.6em */
+}
+
+// INIT PAGE
+#main-header.init .search-bar {
+  animation-name: openBar;
+  animation-duration: 0.8s;
+  animation-iteration-count: 1;
+}
+#main-header.init .movie-searcher-title {
+  -webkit-animation-name: fadeInUp;
+  animation-name: fadeInUp;
+}
+
+// RESULT PAGE
+#main-header.result {
+  .main {
+    box-shadow: 3px 0 10px 4px rgba(0, 0, 0, 0.7);
+    .movie-searcher-title {
+      margin-left: 30px;
+    }
+    .search-container {
+      right: 50px;
+    }
+  }
+}
+// #main-header.result
+// &:hover {
+//   .search-bar {
+//     width: 25vw;
+//   }
+// }
+// .search-bar {
+//   transition: width 0.5s ease-in-out;
+//   &:focus {
+//     width: 25vw;
+//   }
+// }
+// }
+
+// COMMON HEADER
+body {
+  background-color: #f2f2f2;
+}
+@mixin themable(
+  $what-page,
+  $main-h,
+  $container-fluid-jc,
+  $movie-searcher-title-fs,
+  $search-container-t,
+  $search-bar-w,
+  $search-bar-h,
+  $search-bar-fs,
+  $search-btn,
+  $card-wrapper-dp
+) {
+  header.#{$what-page} {
+    .main {
+      position: fixed;
+      height: $main-h;
+      width: 100vw;
+      background-image: url("../static/image/main_bg.jpg");
+      background-position: center;
+      background-size: cover;
+      z-index: 9;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      .container-fluid {
+        position: relative;
+        height: fit-content;
+        display: flex;
+        justify-content: $container-fluid-jc;
+        align-items: center;
+        .movie-searcher-title {
+          cursor: pointer;
+          position: absolute;
+          color: #f4f4f4;
+          font-size: $movie-searcher-title-fs;
+          text-shadow: 3px 3px 5px rgba(170, 0, 0, 0.9);
+          font-family: "AvengeanceHeroicAvengerBold";
+        }
+        .search-container {
+          position: absolute;
+          display: flex;
+          align-items: center;
+          margin: auto;
+          top: $search-container-t;
+          .search-bar {
+            animation-name: openBar;
+            animation-duration: 0.8s;
+            animation-iteration-count: 1;
+            width: $search-bar-w;
+            height: $search-bar-h;
+            display: block;
+            border-radius: 50px;
+            border: none;
+            font-size: $search-bar-fs;
+            font-family: "NanumSquareRoundExtraBold";
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            border: rgba(200, 0, 0, 0.842) solid;
+            box-shadow: 0 0 5px 3px rgba(200, 0, 0, 0.8),
+              0 0 5px 3px rgba(255, 0, 0, 0.6) inset;
+            color: #fff;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            &::placeholder {
+              color: #fff;
+            }
+            &:focus {
+              outline: none;
+              border: rgba(0, 85, 182, 0.8) solid;
+              box-shadow: 0 0 5px 3px rgba(0, 85, 182, 0.7),
+                0 0 5px 3px rgba(0, 85, 182, 0.8) inset;
+              &::placeholder {
+                color: transparent;
+                text-shadow: none;
+                font-family: "NanumSquareRoundExtraBold";
+              }
+            }
+          }
+          .search-btn {
+            position: absolute;
+            right: 0;
+            background-image: url("../static/image/marvel-icon.jpg");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: $search-btn;
+            height: $search-btn;
+            border-radius: 50px;
+            border: none;
+            transform: scale(1.01);
+            transition: box-shadow 0.1s;
+            &:hover {
+              box-shadow: 2px 1px 9px 1px rgba(0, 0, 0, 0.6) inset;
+            }
+            &:active {
+              box-shadow: 0 0 9px 3px rgba(0, 0, 0, 1) inset;
+            }
+          }
+        }
+      }
+    }
+  }
+  .cards-wrapper {
+    display: $card-wrapper-dp;
+    position: relative;
+    top: 230px;
+    margin: auto;
+    width: 70vw;
+    left: 4vw;
+    .total-search {
+      position: absolute;
+      top: -55px;
+      font-family: "NanumSquareBold";
+      font-size: 20px;
+      margin-left: 30px;
+      color: #42454c;
+      strong {
+        font-size: 24px;
+        font-family: "NanumSquareExtraBold";
+      }
+    }
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      margin: auto;
+      display: flex;
+      .movie-card {
+        cursor: pointer;
+        width: max(14vw, 200px);
+        height: max(18vw, 300px);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background-clip: border-box;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: #182032;
+        box-shadow: 2px 2px 7px 2px rgba(0, 0, 0, 0.7);
+        margin: 0 50px 50px 0;
+        transition: transform 0.5s;
+        &:hover {
+          transform: scale(1.04);
+        }
+        .card__poster {
+          width: 100%;
+          height: 65%;
+          background-size: cover;
+        }
+        .card__default-img {
+          width: 100%;
+          height: 65%;
+          background-size: 30%;
+          background-repeat: no-repeat;
+          background-position: center;
+          border-bottom: 1.5px solid #42454c;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .card__thumb {
+          bottom: 0;
+          height: 55px;
+          flex: 1 1 auto;
+          padding: 0 20px;
+          .card__title {
+            margin-top: 20px;
+            font-family: "NanumSquareRoundExtraBold";
+            color: #fff;
+            @include ellipsis(2, 1.3em);
+          }
+          .card__year {
+            position: absolute;
+            font-family: "NanumSquareRoundExtraBold";
+            color: #f4f4f4;
+            bottom: -4px;
+          }
+        }
+      }
+    }
+  }
+}
+@include themable(
+  init,
+  100vh,
+  center,
+  6vw,
+  3vw,
+  40vw,
+  100px,
+  55px,
+  100px,
+  none
+);
+@include themable(
+  result,
+  min(18vh, 150px),
+  space-between,
+  min(5vw, 80px),
+  auto,
+  25vw,
+  50px,
+  30px,
+  50px,
+  block
+);
+
+.dark-window {
+  opacity: 0;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  .card__popup {
+    overflow: hidden;
+    position: relative;
+    width: 55vw;
+    height: 35vw;
+    background-color: #f2f2f2;
+    top: 16vh;
+    border-radius: 10px;
+    margin: auto;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3) inset,
+      0 2px 7px rgba(255, 255, 255, 0.3);
+    transform: translate(0, 5%);
+    vertical-align: center;
+    .popup__close {
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      border: none;
+      font-size: 25px;
+      z-index: 2;
+      background-color: transparent;
+    }
+    .detail__table {
+      position: absolute;
+      width: 55vw;
+      height: 100%;
+      font-size: 18px;
+      font-family: "NanumSquareBold";
+      border: none;
+      tbody > tr > *:not(.detail__poster-wrapper, .star-ratings) {
+        padding-left: 20px;
+      }
+      .detail__poster-wrapper {
+        background-color: #182032;
+        text-align: center;
+        overflow: hidden;
+        width: 25vw;
+        height: 35vw;
+        .detail__poster {
+          overflow: hidden;
+          background-size: contain;
+          background-position: center;
+          object-fit: cover;
+        }
+      }
+      .detail__title {
+        height: 6vw;
+        font-family: "NanumSquareRoundExtraBold";
+        font-size: 1.8vw;
+        line-height: 90%;
+      }
+      .detail__open {
+        height: 3vw;
+      }
+      .detail__rate {
+        height: 3vw;
+        width: 7.5vw;
+      }
+      .detail__others {
+        height: 3vw;
+      }
+      .detail__plot {
+        &:before {
+          content: "";
+          position: absolute;
+          display: block;
+          width: 29vw;
+          margin-top: -3vw;
+          border-top: 1px solid #c9c9c9d0;
+        }
+      }
+    }
+  }
+}
+.dark-window.show {
+  position: fixed;
+  opacity: 1;
+  transition: all 0.8s;
+  z-index: 10;
+}
+
+.star-ratings {
+  width: fit-content;
+  color: #aaa9a9;
+  position: relative;
+  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 1px;
+  display: block;
+  top: 25%;
+  height: fit-content;
+  .star-ratings-fill {
+    color: transparent;
+    padding-left: 1px;
+    position: absolute;
+    text-shadow: 0 0 0 #ffd700;
+    z-index: 1;
+    display: flex;
+    margin: auto;
+    font-size: 1.7vh;
+    overflow: hidden;
+  }
+  .star-ratings-base {
+    margin: auto;
+    font-size: 1.7vh;
+    color: transparent;
+    text-shadow: 0 0 0 #c9c9c9;
+    z-index: 0;
+    padding: 0;
+  }
+}
+
+td:not(.star-ratings, .detail__plot):before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 29vw;
+  margin-top: -1vw;
+  border-top: 1px solid #c9c9c9d0;
+}
