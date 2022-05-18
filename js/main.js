@@ -3,6 +3,7 @@ import "../scss/animate.css";
 
 const apiKey = process.env.API_KEY;
 let pageNo = 1;
+let searchValue = "";
 
 // All Movie Data API
 async function getMovies(title, page) {
@@ -64,11 +65,10 @@ function goHome() {
 async function cardList(pageNo, init = false) {
   // id가 input인 태그를 찾아서 value값을 변수에 저장
   const input = document.getElementById("input");
-  const title = input.value;
+  const title = init ? input.value : searchValue;
   const cards = document.getElementById("cards");
   const totalSearch = document.querySelector(".total-search");
   const data = await getMovies(title, pageNo);
-  console.log(data.Response);
   if (data.Response === "False") {
     totalSearch.innerHTML = `" <strong>${title}</strong> "의 검색결과: 0개`;
     cards.innerHTML =
@@ -132,6 +132,7 @@ function initialize() {
     activateLoader();
 
     const headerClass = document.querySelector("header").classList;
+    const title = document.getElementById("input").value;
     if (headerClass.contains("init") && searchInput.value !== "") {
       // form의 디폴트 이벤트(새로고침) 방지
       e.preventDefault();
@@ -139,6 +140,7 @@ function initialize() {
       pageNo = 1;
 
       // 카드 리스트가 만들어진 뒤, 바로 modal을 만드는 함수 실행
+      searchValue = title;
       cardList(pageNo, true).then(() => {
         deactivateLoader();
         clickPopup();
@@ -147,6 +149,7 @@ function initialize() {
       return;
     }
     // 새로운 검색어 입력했을 때, 스크롤을 상단으로 초기화
+    searchValue = title;
     window.scrollTo(0, 0);
     const cards = document.querySelector("#cards");
     cards.innerHTML = "";
