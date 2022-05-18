@@ -32,16 +32,10 @@
 @keyframes openBar {
   0% {
     opacity: 0;
-    border: none;
-    box-shadow: none;
-    background-color: transparent;
-    backdrop-filter: none;
     width: 0;
   }
-  1% {
-    opacity: 1;
-  }
   100% {
+    opacity: 1;
     width: 40vw;
   }
 }
@@ -72,7 +66,7 @@
   }
 }
 
-// 글자 수 제한
+// 카드 내 글자 수 제한
 @mixin ellipsis($line-cnt, $line-height) {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -130,6 +124,7 @@ body {
   $what-page,
   $main-h,
   $container-fluid-jc,
+  $title-cursor,
   $movie-searcher-title-fs,
   $search-container-t,
   $search-bar-w,
@@ -157,7 +152,7 @@ body {
         justify-content: $container-fluid-jc;
         align-items: center;
         .movie-searcher-title {
-          cursor: pointer;
+          cursor: $title-cursor;
           position: absolute;
           color: #f4f4f4;
           font-size: $movie-searcher-title-fs;
@@ -269,6 +264,22 @@ body {
         transition: transform 0.5s;
         &:hover {
           transform: scale(1.04);
+          box-sizing: border-box;
+          &::before {
+            content: "Show Detail";
+            cursor: pointer;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.7);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: block;
+            text-align: center;
+            font-size: 2vw;
+            font-family: "AvengeanceHeroicAvengerBold";
+            line-height: 20vw;
+            z-index: 2;
+          }
         }
         .card__poster {
           width: 100%;
@@ -312,6 +323,7 @@ body {
   init,
   100vh,
   center,
+  default,
   6vw,
   3vw,
   40vw,
@@ -324,6 +336,7 @@ body {
   result,
   min(18vh, 150px),
   space-between,
+  pointer,
   min(5vw, 80px),
   auto,
   25vw,
@@ -333,7 +346,42 @@ body {
   block
 );
 
+.loader {
+  z-index: 9999;
+  position: fixed;
+  top: 50%;
+  left: calc(50% - 60px);
+  // border: 16px solid #fdb9b7;
+  // border-top: 16px solid linear-gradient(to top, transparent 20%, #db3934 80%);
+  border: 16px solid transparent;
+  background-image: linear-gradient(#f2f2f2, #f2f2f2),
+    linear-gradient(to right, #fbfcb9e9, #ffcdf3dc, #65d3ffde);
+  border-radius: 50%;
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  width: 120px;
+  height: 120px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.no-result {
+  position: fixed;
+  top: calc(50% - 256px);
+  left: calc(50% - 256px);
+  transform: scale(0.7);
+}
+
 .dark-window {
+  display: none;
   opacity: 0;
   z-index: -1;
   top: 0;
@@ -356,6 +404,7 @@ body {
     transform: translate(0, 5%);
     vertical-align: center;
     .popup__close {
+      cursor: pointer;
       width: 30px;
       height: 30px;
       text-align: center;
@@ -420,6 +469,7 @@ body {
   }
 }
 .dark-window.show {
+  display: block;
   position: fixed;
   opacity: 1;
   transition: all 0.8s;
