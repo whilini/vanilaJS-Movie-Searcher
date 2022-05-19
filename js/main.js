@@ -3,7 +3,7 @@ import "../scss/animate.css";
 
 const apiKey = process.env.API_KEY;
 let pageNo = 1;
-let searchValue = "";
+let searchValue = ""; // 전역으로 저장한 검색어
 
 // All Movie Data API
 async function getMovies(title, page) {
@@ -57,6 +57,18 @@ function goHome() {
   });
 }
 
+function createElement(str) {
+  const fragment = document.createDocumentFragment();
+
+  const elem = document.createElement("div");
+  elem.innerHTML = str;
+
+  while (elem.childNodes[0]) {
+    fragment.appendChild(elem.childNodes[0]);
+  }
+  return fragment;
+}
+
 /**
  * 1. getMovies를 통해서 전체 데이터 받아오기
  * 2. getMovies의  결과 데이터를 map으로 순회하면서 createCard 호출
@@ -69,6 +81,7 @@ async function cardList(pageNo, init = false) {
   const cards = document.getElementById("cards");
   const totalSearch = document.querySelector(".total-search");
   const data = await getMovies(title, pageNo);
+
   if (data.Response === "False") {
     totalSearch.innerHTML = `" <strong>${title}</strong> "의 검색결과: 0개`;
     cards.innerHTML =
@@ -76,27 +89,28 @@ async function cardList(pageNo, init = false) {
     return;
   }
 
-  const movieCard = data.Search.map((d) => {
+  const movieCardList = data.Search.map((d) => {
     if (d.Poster !== "N/A") {
       // 큰 포스터 가져오기
       const bigPoster = d.Poster.replace("SX300", "SX700");
-      return createCard(d.imdbID, d.Title, d.Year, bigPoster);
+      const cardHtml = createCard(d.imdbID, d.Title, d.Year, bigPoster);
+      const card = createElement(cardHtml);
+      return card;
     } else {
       // 포스터가 없는 영화 정보
-      return defaultImg(d.imdbID, d.Title, d.Year);
+      const imageHtml = defaultImg(d.imdbID, d.Title, d.Year);
+      const defaultImage = createElement(imageHtml);
+      return defaultImage;
     }
   });
 
-  const totalSearchData = data.totalResults ? data.totalResults : "0";
-
   // 총 검색결과 수
   if (init) {
-    totalSearch.innerHTML = `" <strong>${title}</strong> "의 검색결과: ${totalSearchData}개`;
-    cards.innerHTML = movieCard.join("\n");
+    totalSearch.innerHTML = `" <strong>${title}</strong> "의 검색결과: ${data.totalResults}개`;
+    movieCardList.forEach((card) => cards.appendChild(card));
     return;
   }
-
-  cards.innerHTML += movieCard.join("\n");
+  movieCardList.forEach((card) => cards.appendChild(card));
 }
 
 // Loading Image
@@ -149,12 +163,14 @@ function initialize() {
       return;
     }
     // 새로운 검색어 입력했을 때, 스크롤을 상단으로 초기화
-    searchValue = title;
+
     window.scrollTo(0, 0);
     const cards = document.querySelector("#cards");
     cards.innerHTML = "";
     e.preventDefault();
+
     pageNo = 1;
+    searchValue = title;
     cardList(pageNo, true).then(() => {
       deactivateLoader();
       clickPopup();

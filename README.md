@@ -6,6 +6,12 @@
 - 내용:
   - 주어진 API를 활용해 영화 검색 프로젝트를 만들어보세요.
 
+## 배포 사이트
+
+https://flourishing-piroshki-17aebb.netlify.app/
+
+<br>
+
 ## 요구사항
 
 ### 필수 요구사항
@@ -18,15 +24,16 @@
 ### 선택 요구사항
 
 - [x] Webpack 프로젝트로 구성해보세요.
-- [ ] 클라이언트에서 API Key가 노출되지 않도록 만들어보세요.
+- [x] 클라이언트에서 API Key가 노출되지 않도록 만들어보세요.
 - [x] 무한 스크롤을 위한 'Intersection Observer'를 활용해보세요.
-- [ ] 최초 API 요청(Request)에 대한 로딩 애니메이션을 추가해보세요.
+- [x] 최초 API 요청(Request)에 대한 로딩 애니메이션을 추가해보세요.
 - [x] SCSS, Bootstrap 등을 구성해 프로젝트를 최대한 예쁘게(?) 만들어보세요.
 - [x] 영화 포스터 주소에 포함된 `SX300`를 `SX700`과 같이 더 큰 숫자로 수정해 요청하세요.
-- [ ] 실시간으로 이미지의 크기를 다르게 요청하는 것이 어떤 원리로 가능한지 조사해보세요.
-- [ ] 요청 주소에 HTTP가 아닌 HTTPS 프로토콜을 사용해야 하는 이유를 조사해보세요.
+- [x] 실시간으로 이미지의 크기를 다르게 요청하는 것이 어떤 원리로 가능한지 조사해보세요.
+- [x] 요청 주소에 HTTP가 아닌 HTTPS 프로토콜을 사용해야 하는 이유를 조사해보세요.
 
-###README
+### README
+
 일반적인 해상도의 비율에서 보시는 것을 추천드립니다. 저는 16:9 비율의 모니터로 작업하였습니다.
 
 <html>
@@ -233,4 +240,41 @@ function disableScrollWheel() {
 function enableScrollWheel() {
   window.removeEventListener("wheel", preventScroll);
 }
+```
+
+<br>
+
+**⚠️스크롤 하면서 카드를 불러올 때, 이미 불러온 카드가 깜빡거림. 스크롤 할 때마다 새로 불러오기 때문.**
+
+```jsx
+if (init) {
+  cards.innerHTML = movieCard.join("\n");
+  return;
+}
+cards.innerHTML += movieCard.join("\n");
+movieCardList.forEach((card) => cards.appendChild(card));
+```
+
+코드를 새로 불러오는 것이 아닌 appendChild로 요소를 삽입, 새로운 검색어를 입력하면 `innerHTML = “”`로 이전 검색리스트 비워줌
+
+```jsx
+function createElement(str) {
+  const fragment = document.createDocumentFragment();
+
+  const elem = document.createElement("div");
+  elem.innerHTML = str;
+
+  while (elem.childNodes[0]) {
+    fragment.appendChild(elem.childNodes[0]);
+  }
+  return fragment;
+}
+------
+const movieCardList = data.Search.map((d) => {
+	const cardHtml = createCard(d.imdbID, d.Title, d.Year, bigPoster);
+	const card = createElement(cardHtml);
+	return card;
+}
+------
+movieCardList.forEach((card) => cards.appendChild(card));
 ```
